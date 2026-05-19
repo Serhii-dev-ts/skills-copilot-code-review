@@ -30,13 +30,48 @@
   --error-light: #ffebee;
   --info: #0c5460;
   --info-light: #d1ecf1;
+
+  /* Additional colors */
+  --tag-background: #e8eaf6;
+  --tag-text: #3949ab;
+  --tooltip-background: #212121;
+  --announcement-bg: #4caf50;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: Arial, sans-serif;
+}
+
+/* Skip link for keyboard navigation - accessible but hidden visually */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--primary);
+  color: var(--primary-text);
+  padding: 8px;
+  text-decoration: none;
+  z-index: 10000;
+  border-radius: 0 4px 4px 0;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Screen reader only text - hidden visually but accessible to assistive tech */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
 }
 
 body {
@@ -156,7 +191,7 @@ section h3 {
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: hidden;
@@ -167,6 +202,11 @@ section h3 {
   transform: translateY(-5px);
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
   border-color: var(--border-focus);
+}
+
+.activity-card:focus-within {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
 }
 
 .activity-card h4 {
@@ -195,8 +235,8 @@ section h3 {
   position: absolute;
   top: 8px;
   right: 8px;
-  background: #e8eaf6;
-  color: #3949ab;
+  background: var(--tag-background);
+  color: var(--tag-text);
   font-size: 0.65rem;
   font-weight: bold;
   padding: 2px 6px;
@@ -285,6 +325,12 @@ section h3 {
   letter-spacing: 0.3px;
   text-transform: uppercase;
   border: none;
+  cursor: pointer;
+}
+
+.register-button:focus-visible {
+  outline: 2px solid var(--secondary-light);
+  outline-offset: 2px;
 }
 
 button {
@@ -295,7 +341,16 @@ button {
   font-size: 0.85rem;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--primary-light);
+}
+
+button:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
 }
 
 /* Tooltip styles */
@@ -307,7 +362,7 @@ button {
 
 .tooltip .tooltip-text {
   visibility: hidden;
-  background-color: rgba(33, 33, 33, 0.9);
+  background-color: var(--tooltip-background);
   color: #fff;
   text-align: center;
   padding: 8px 12px;
@@ -319,7 +374,7 @@ button {
   left: 50%;
   transform: translateX(-50%);
   opacity: 0;
-  transition: opacity 0.2s, visibility 0.2s;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
   width: max-content;
   max-width: 250px;
   pointer-events: none;
@@ -441,6 +496,23 @@ button {
   cursor: pointer;
   color: var(--text-secondary);
   line-height: 1;
+  background: none;
+  border: none;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-modal:hover,
+.close-login-modal:hover {
+  background-color: var(--border-light);
+  color: var(--text-primary);
+}
+
+.close-modal:focus-visible,
+.close-login-modal:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
 }
 
 /* Login modal specific styling */
@@ -449,6 +521,50 @@ button {
   font-size: 1.2rem;
   margin-bottom: 15px;
   text-align: center;
+}
+
+/* Form styling */
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.form-group label {
+  font-weight: 500;
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 2px rgba(83, 75, 174, 0.1);
+}
+
+.form-group input:invalid:not(:placeholder-shown) {
+  border-color: var(--error);
+  background-color: var(--error-light);
+}
+
+.form-group small {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+}
+
+.form-group .error-message {
+  color: var(--error);
+  font-size: 0.8rem;
+  font-weight: 500;
 }
 
 /* Hidden class - critical for showing/hiding elements */
@@ -520,6 +636,11 @@ footer {
   background-color: var(--primary-light);
 }
 
+.search-box button:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: -2px;
+}
+
 .search-icon {
   font-size: 1rem;
 }
@@ -529,12 +650,15 @@ footer {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  border: none;
+  padding: 0;
 }
 
 .filter-label {
   font-weight: 600;
   color: var(--text-primary);
   font-size: 0.8rem;
+  margin: 0;
 }
 
 .category-filters,
@@ -558,6 +682,13 @@ footer {
   transition: all 0.2s ease;
 }
 
+.category-filter:focus-visible,
+.day-filter:focus-visible,
+.time-filter:focus-visible {
+  outline: 2px solid var(--primary-light);
+  outline-offset: 2px;
+}
+
 .category-filter.active,
 .day-filter.active,
 .time-filter.active {
@@ -571,10 +702,6 @@ footer {
 .time-filter:hover {
   background-color: var(--primary-light);
   color: white;
-}
-
-.time-filters {
-  width: 100%;
 }
 
 .reset-button {
@@ -643,11 +770,18 @@ footer {
   border-radius: 20px;
   padding: 4px 12px;
   font-size: 0.85rem;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  border: none;
 }
 
 .icon-button:hover {
   background-color: rgba(255, 255, 255, 0.3);
+}
+
+.icon-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
 }
 
 .user-icon {
@@ -659,8 +793,25 @@ footer {
   background-color: rgba(255, 255, 255, 0.2);
   font-size: 0.8rem;
   border-radius: 20px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 #logout-button:hover {
   background-color: rgba(255, 255, 255, 0.3);
+}
+
+#logout-button:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.8);
+  outline-offset: 2px;
+}
+
+.announcement-banner {
+  background-color: var(--announcement-bg);
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-weight: bold;
 }
